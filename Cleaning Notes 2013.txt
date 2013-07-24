@@ -1,0 +1,20 @@
+Cleaned Responses I is as submitted except:
+- removed 16 April entry, assumed to be test data
+- added one record from IWMW13 participant
+- removed redundant columns from previous versions and empty rows
+
+Cleaned Responses II:
+- manually adjusted user-supplied "other" roles (Q2) to be more like common categories. Added an "other" category as a bucket.
+- break Q3 from 1 column with CSV entries to multiple additional columns. Some "other" entries mapped to APQ. Added "learning and teaching enhancement" and mapped some "other" entries to it.
+- added a column for the ratio of "dont know" responses for Q4. Similarly for Qs 5-9
+- break out both parts of Q10 as done for Q3
+
+Anonymised and Cleaned III:
+- Q1 entry for both sectors changed to "Both"
+- deleted examples and email addresses (Q11 and Q12) which could be used to identify the institution
+- changed header row to be R DataFrame-friendly
+- removed timestamp (not needed)
+- corrected spurious spaces: "Not at all "     " Some awareness"
+- normalised to plain "'" in "I don't know"
+- imputed "I don't know" for 4 cases (2 in Q5, 1 in Q7, one in Q9)
+** this version saved as CSV for import to R
