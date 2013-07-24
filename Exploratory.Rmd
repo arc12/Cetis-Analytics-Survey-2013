@@ -9,7 +9,7 @@ Refer forwards to limitations, read-only version of the survey form, the data an
 
 ```{r echo=FALSE}
 #settings
-echo.setting<-T #change this to hide all the source listings
+echo.setting<-F #change this to hide all the source listings
 fw<-7 #default figure height
 fh<-7 #default figure width
 col.yndnk<-c("#d0d0d0","#3333ff","#ee7700") #bar colours - order is "dont know", "no", "yes"
@@ -36,12 +36,14 @@ resp.count<-length(responses[,1])
 There are `r resp.count` responses.
 
 *Which education sector do you work in (or with)?*
+
 ```{r fig.width=fw, fig.height=fh, echo=echo.setting}
 table(responses[,"Q1.Sector"])
 pie(table(responses[,"Q1.Sector"]),main="Sector")
 ```
 
 *What us your role in your institution?*
+
 ```{r fig.width=fw, fig.height=fh, echo=echo.setting}
 role_T<-table(responses[,"Q2.Role"])
 insideLabel.barplot(role_T[order(role_T)],Main="Role", Col=rainbow(n=length(role_T), alpha=0.5))
@@ -49,7 +51,10 @@ insideLabel.barplot(role_T[order(role_T)],Main="Role", Col=rainbow(n=length(role
 
 What does "Don't Know" Look Like?
 ------
-Consider the distribution of the mean per-response "don't know".
+For each question in a given response, a "don't know rating"" is calculated as the proportion of options within that question that were answered "I don't know". Question 3 contained no options so has a dont know rating of 0 or 1 only.
+
+Calculate the mean don't know rating for each response and see what the distribution looks like.
+
 ```{r echo=echo.setting}
 dont.know.cols<-responses[,c("Q3.Leading.Dont.Know","Q4.Awareness.Dont.know.ratio","Q5.Use.Stats.Dont.know.ratio","Q6.Sources.Dont.know.ratio","Q7.Technologies.Dont.know.ratio","Q9.Staff.Dont.know.ratio")]
 colnames(dont.know.cols)<-sub(".Dont.Know","",sub(".Dont.know.ratio","",colnames(dont.know.cols)))
@@ -58,28 +63,33 @@ hist(dont.know.sums)
 summary(dont.know.sums)
 ```
 
-How did the state of unknowing vary between questions? Consider the mean over all responses for each question. For all but Q3, this is a mean of the means of the sub-questions. Don't know = 1.
+How did the state of unknowing vary between questions? Consider the mean over all responses for each question.
+
 ```{r fig.width=fw, fig.height=fh, echo=echo.setting}
 insideLabel.barplot(col_sums(dont.know.cols),Main="Per-question Don't Know Level")
 ```
 
 A quick look to see if "don't know" for different questions appears to correlate
+
 ```{r fig.width=fw, fig.height=fh, echo=echo.setting}
 plot(dont.know.cols)
 ```
 
+Not really, although a hint between questions 5,6, and 7.
+
 Clustering. Silohette width (0.5-0.7 => reasonable structire), (0.25-0.5 => weak structure, may be artificial).
+
 ```{r fig.width=fw, fig.height=fh, echo=echo.setting}
 #http://www.unesco.org/webworld/idams/advguide/Chapt7_1_1.htm
 dnk.pam2<-pam(dont.know.cols,2)
 plot(dnk.pam2)
 ```
 
-Clusters are centerd at:
-```{r}
+Clusters are centerd around (medoids have >0.5 weighting for the questions called out below):
+```{r echo=echo.setting}
 #get a list of the barriers indicated by each medoid
    medoids<-dnk.pam2$medoids
-   apply(medoids, MARGIN=1, function(x){paste(names(x[x==1]), collapse=", ")})
+   apply(medoids, MARGIN=1, function(x){paste(names(x[x>0.5]), collapse=", ")})
 ```
 
 
@@ -89,11 +99,11 @@ Clusters are centerd at:
 dnk.pam3<-pam(dont.know.cols,3)
 plot(dnk.pam3)
 ```
-Clusters are centerd at:
-```{r}
+Clusters are centerd around:
+```{r echo=echo.setting}
 #get a list of the barriers indicated by each medoid
    medoids<-dnk.pam3$medoids
-   apply(medoids, MARGIN=1, function(x){paste(names(x[x==1]), collapse=", ")})
+   apply(medoids, MARGIN=1, function(x){paste(names(x[x>0.5]), collapse=", ")})
 ```
 
 ```{r fig.width=fw, fig.height=fh, echo=echo.setting}
@@ -101,13 +111,14 @@ dnk.pam4<-pam(dont.know.cols,4)
 plot(dnk.pam4)
 ```
 Clusters are centerd at:
-```{r}
+```{r echo=echo.setting}
 #get a list of the barriers indicated by each medoid
    medoids<-dnk.pam4$medoids
    apply(medoids, MARGIN=1, function(x){paste(names(x[x>0]), collapse=", ")})
 ```
 
 Who didn't know the most (dont know mean ratio >= 3rd quartile)
+
 ```{r fig.width=fw, fig.height=fh, echo=echo.setting}
 upper.quartile.ratio<-quantile(dont.know.sums,0.75)
 dont.know.most.responses<-responses[dont.know.sums>=upper.quartile.ratio,]
@@ -123,15 +134,18 @@ The low levels of awareness in some stakeholder groups is remarkable and potenti
 Leading the Charge
 ------
 *In your institution which department(s) are leading institutional analytics activities and services?*
+
 ```{r fig.width=fw, fig.height=fh, echo=echo.setting}
 leading<-responses[,5:10]
 leading.dont.know.sum<-sum(responses[,11])
-colnames(leading)<-gsub("[.]"," ",sub("Q3.Leading.","",colnames(leading)))
-insideLabel.barplot(col_sums(leading),"Q3 Leading", Col=rainbow(n=length(pc.by.role), alpha=0.5))
+colnames(leading)<-tidy.colnames(leading,"Q3.Leading")
+leading_S<-col_sums(leading)
+leading_S<-leading_S[order(leading_S, decreasing=F)]
+insideLabel.barplot(leading_S,"Q3 Leading Analytics", Col=rev(heat.colors(n=length(leading_S), alpha=0.5)))
 ```
 
 Other comprises
-```{r fig.width=fw, fig.height=fh, echo=echo.setting}
+```{r echo=echo.setting}
 responses[leading[,6]>=1,"Q3.Leading.Text"]
 ```
 There were `r leading.dont.know.sum` "don't know" responses.
@@ -142,16 +156,18 @@ Awareness
 Multiple options were permitted per response.
 
 These results are biassed because of the distribution of backgrounds of respondants. Given the proportion of don't know responses varies upwards from 20%, the real picture may be quite different. Note, for example, that the least well represented groups (teaching and researcher management) have the largest "don't know" responses, up to 40%.
-```{r}
+
+```{r echo=echo.setting}
 awareness<-responses[,12:17]
 awareness_T<-sapply(awareness, function(x){table(ordered(x, levels=c("Not at all","Some awareness","Very aware","I don't know")))})
 colnames(awareness_T)<-tidy.colnames(awareness_T,"Q4.Awareness")
 ```
 
 Aggregate over all staff groups (`r paste(tidy.colnames(awareness,"Q4.Awareness"), collapse=", ")`) and plot the awareness distribution. 
+
 ```{r fig.width=fw, fig.height=fh, echo=echo.setting}
 awareness_Agg<-apply(awareness_T, MARGIN=1, sum)
-pie(awareness_Agg, main="Staff Awareness Across All Groups")
+pie(awareness_Agg, main="Q4 Staff Awareness Across All Groups")
 ```
 
 Plot the number of responses of "very aware" for each staff group and, on a separate plot, numbers for "not aware".
@@ -167,9 +183,10 @@ insideLabel.barplot(notAware[order(notAware)], Main="\"Not Aware\" Groups", Ylab
 ```
 
 Or maybe enough can be gleaned from a composite bar plot, ordered by increasing number of "Very aware" responses:
+
 ```{r fig.width=fw, fig.height=fh, echo=echo.setting}
 op<-par(mar = c(9,4,4,2) +0.1)
-barplot(awareness_T[,order(awareness_T["Very aware",])], col=col.awareness, las=2, cex.names=0.9, main="Perception of Awareness Among Staff Groups", ylab="Responses")
+barplot(awareness_T[,order(awareness_T["Very aware",])], col=col.awareness, las=2, cex.names=0.9, main="Q4 Perception of Awareness Among Staff Groups", ylab="Responses")
 legend(x=4.5,y=11,rev(rownames(awareness_T)), fill=rev(col.awareness), cex=0.8, bg="#ffffff")
 par(op)
 ```
@@ -180,24 +197,26 @@ Use of Statistical Analysis
 -----
 *Do the following roles use the results of statistical analysis such as correlation or significance testing rather than simple reporting of data in charts or tables?*
 
-```{r}
+```{r echo=echo.setting}
 statAnal<-responses[,20:26]
 statAnal_T<-sapply(statAnal, function(x){table(ordered(x, levels=c("Never","Sometimes","I don't know")))})
 colnames(statAnal_T)<-tidy.colnames(statAnal_T,"Q5.Use.Stats")
 ```
 
 Aggregate over all staff groups (`r paste(colnames(statAnal_T), collapse=", ")`) and plot the distribution. 
+
 ```{r fig.width=fw, fig.height=fh, echo=echo.setting}
 statAnal_Agg<-apply(statAnal_T, MARGIN=1, sum)
-pie(statAnal_Agg, main="Use of Stats Analysis Across All Groups")
+pie(statAnal_Agg, main="Q5 Use of Statistical Analysis Across All Groups")
 ```
 
 The general levels of "don't know" are really rather high. What does this tell us? Probably that the reports and verbal communications do not refer to this kind of analysis and hence that it is not occurring. Arguably, this kind of analysis is necessary in order to decide whether the tables of data and charts really signify a compelling case for action exists. It may also be the case, however, that this kind of analysis is being done but hidden.
 
 The pattern is pretty similar across all roles with exceptionm of facilities/estates and finance/purchasing. Is this real? Actually, these are probably the ones where this is most easy to do without worrying about the complexity/subtlety of teaching and learning or the uncertainties in external environmental factors.
+
 ```{r fig.width=fw, fig.height=fh, echo=echo.setting}
 op<-par(mar = c(9,4,4,2) +0.1)
-barplot(statAnal_T[,order(statAnal_T["Never",], decreasing=T)], col=col.stats, las=2, cex.names=0.9, main="Use of Stats Analysis Among Staff Groups", ylab="Responses")
+barplot(statAnal_T[,order(statAnal_T["Never",], decreasing=T)], col=col.stats, las=2, cex.names=0.9, main="Q5 Use of Statistical Analysis Among Staff Groups", ylab="Responses")
 legend(x=0.5,y=24,rev(rownames(statAnal_T)), fill=rev(col.stats), cex=0.8, bg="#ffffff")
 par(op)
 ```
@@ -213,7 +232,7 @@ dataSources<-responses[,29:39]
 colnames(dataSources)<-tidy.colnames(dataSources,"Q6.Sources")
 dataSources_T<-sapply(dataSources, table)
 op <- par(mar = c(10, 4, 4, 2) + 0.1)
-barplot(dataSources_T, beside=T, col=col.yndnk, las=2, cex.names=0.8, main="Which Data Sources are Used?", ylab="Responses")
+barplot(dataSources_T, beside=T, col=col.yndnk, las=2, cex.names=0.8, main="Q6 Which Data Sources are Used?", ylab="Responses")
 legend(x=28, y=21, rownames(dataSources_T), fill=col.yndnk, cex=0.8)
 par(op)
 ```
@@ -223,7 +242,7 @@ Technologies in Place
 Although the faction of "don't know" resonses is also quite high for technologies in place, there is rather more consistency across the different options given in the question. The least commonly used technologies are, however, those with the largest number of "don't know" responses and it is plausible that some "don't know" responses for "predicitive analytics" occurred because the term is imprecise.
 
 
-```{r}
+```{r echo=echo.setting}
 techs<-responses[,42:46]
 #a fix-up because there are no "Yes" responses, which would lead to techs_T being a list since the results of apply would not be of equal length.
 techs_T<-sapply(techs, function(x){table(ordered(x, levels=c("Yes","No","I don't know")))})
@@ -240,23 +259,26 @@ techs_T<-techs_T[,asc.order]
 ```
 
 Proportion of "don't know".
+
+
 ```{r fig.width=fw, fig.height=fh, echo=echo.setting}
-insideLabel.barplot(techs_T["I don't know",], Main="Technologies - \"Don't Know\" Responses")
+insideLabel.barplot(techs_T["I don't know",], Main="Q7 Technologies - \"Don't Know\" Responses")
 ```
 
 We will assume that the relative proportion of yes/no responses gives an approximate estimate of the proportion of institutions that actually employ these technologies.
 
 ```{r fig.width=fw, fig.height=fh, echo=echo.setting}
 op <- par(mar = c(8, 4, 4, 2) + 0.1)
-barplot(techs_T.ynr, las=2, cex.names=0.8, col=col.yn, main="Which Technologies are in Place?", ylab="Estimated Approximate Proportion")
-legend(x=0.75,y=90,c("Yes","No"), cex=0.8, fill=col.yn, bg="#ffffff")
+barplot(techs_T.ynr, las=2, cex.names=0.9, col=col.yn, main="Q7 Which Technologies are in Place?", ylab="Estimated Approximate Proportion")
+legend(x=0.28,y=97,c("Yes","No"), cex=1.0, fill=col.yn, bg="#ffffff")
 par(op)
 ```
 
 Manual tabulation from free text entries for suppliers with >1 reference. More than 1 supplier may have been specified in a response.
+
 ```{r fig.width=fw, fig.height=fh, echo=echo.setting}
 suppliers<-list(Excel=8, SPSS=4, Cognos=2, Tableau=3, Google.Analytics=2, Qlikview=2)
-barplot(unlist(suppliers), las=2, main="Technology Suppliers", ylab="Responses")
+insideLabel.barplot(unlist(suppliers), Main="Q7 Technology Suppliers", Ylab="Responses")
 ```
 There are `r resp.count` responses.
 
@@ -265,6 +287,7 @@ SPSS is now part of the IBM Cognos offering, although it may be used
 Staff Capabilities
 --------
 The respnses for staff capabilities show some patterns but also plausible evidence that the options may have lacked clarity. In particular, it is possible that the responses indicating more than 10 statisticians refer to academic statisticians rather than statisticians in a business support role. "Data Scientist" is likely to be an unfamiliar term to anyone who has not been following business analytics punditry in which it is proclaimed as a new profession. A large number of "don't know" and "no", is in keeping with its newness as a concept and as a term. Two responses indication more than 10 data scientists possibly reflects two responses from one institution at the forefront of this field.
+
 ```{r fig.width=fw, fig.height=fh, echo=echo.setting}
 staff<-responses[,50:53]
 colnames(staff)<-tidy.colnames(staff,"Q9.Staff")
@@ -272,7 +295,7 @@ colnames(staff)<-tidy.colnames(staff,"Q9.Staff")
 staff_T<-sapply(staff, function(x){table(ordered(x, levels=c("No","Less than 5","5 - 10", "More than 10", "I don't know")))})
 staff_T<-t(staff_T)
 op <- par(mar = c(7, 4, 4, 2) + 0.1)
-barplot(staff_T, beside=T, las=2, col=col.staff)
+barplot(staff_T, beside=T, las=2, col=col.staff, main="Q9 Staff Capabilities")
 legend(x=1,y=15,colnames(staff), cex=0.8, fill=col.staff)
 par(op)
 ```
@@ -289,7 +312,7 @@ colnames(drivers)<-tidy.colnames(drivers,"Q10a.Drivers")
 drivers<-col_sums(drivers)
 drivers<-drivers[order(drivers, decreasing=F)]
 col.drivers<-rev(heat.colors(length(drivers), alpha=0.5))
-insideLabel.barplot(drivers, Main="Drivers for Analytics", Col=col.drivers)
+insideLabel.barplot(drivers, Main="Q10 Drivers for Analytics", Col=col.drivers)
 ```
 
 Low value for research excellence may reflect the survey group, which contains an unknown number of responses from research intensive institutions.
@@ -308,7 +331,7 @@ colnames(barriers)<-tidy.colnames(barriers,"Q10b.Barriers")
 barriers_S<-col_sums(barriers)
 barriers_S<-barriers_S[order(barriers_S, decreasing=F)]
 col.barriers<-rev(heat.colors(length(barriers_S), alpha=0.5))
-insideLabel.barplot(barriers_S, Main="Barriers to Adoption", Col=col.barriers)
+insideLabel.barplot(barriers_S, Main="Q10 Barriers to Adoption", Col=col.barriers)
 ```
 
 How many responses only gave "other"?
@@ -316,6 +339,7 @@ How many responses only gave "other"?
 Look for clusters.
 
 A pale colour indicates the row and column are associated. The more pale, the more concentrated the association. From this, we can see that 5 responses only gave "other" while a further "other (response 12) occurred with 3 other options."
+
 ```{r fig.width=fw, fig.height=fh, echo=echo.setting}
 heatmap(as.matrix(barriers), margin=c(9,4), ylab="Response  No.")
 #heatmap.2(as.matrix(barriers), margin=c(7,4), ylab="Response  No.", dendrogram="none", key=F, trace="both")
@@ -325,39 +349,42 @@ Repondants who stated "other" supplied: "time", "enough staff resources and prio
 
 
 Try 2 clusters:
+
 ```{r fig.width=fw, fig.height=fh, echo=echo.setting}
    barriers.pam<-pam(barriers,2)
    plot(barriers.pam)
 ```
 
 Clusters are centerd at:
-```{r}
+```{r echo=echo.setting}
 #get a list of the barriers indicated by each medoid
    medoids<-barriers.pam$medoids
    apply(medoids, MARGIN=1, function(x){paste(names(x[x==1]), collapse=", ")})
 ```
 
 Try 3 clusters:
+
 ```{r fig.width=fw, fig.height=fh, echo=echo.setting}
    barriers.pam<-pam(barriers,3)
    plot(barriers.pam)
 ```
 
 Clusters are centerd at:
-```{r}
+```{r echo=echo.setting}
    medoids<-barriers.pam$medoids
 #get a list of the barriers indicated by each medoid
    apply(medoids, MARGIN=1, function(x){paste(names(x[x==1]), collapse=", ")})
 ```
 
 Try 4 clusters:
+
 ```{r fig.width=fw, fig.height=fh, echo=echo.setting}
    barriers.pam<-pam(barriers,4)
    plot(barriers.pam)
 ```
 
 Clusters are centerd at:
-```{r}
+```{r echo=echo.setting}
    medoids<-barriers.pam$medoids
 #get a list of the barriers indicated by each medoid
    apply(medoids, MARGIN=1, function(x){paste(names(x[x==1]), collapse=", ")})
@@ -381,3 +408,7 @@ Caveats and Technical Notes
 Consequently, the analysis in this report is not to be taken as representing the truth but as being indicative and containing a taint of subjectivity. The report is written as a stimulus both for discussion and for more thorough investigation into some of the areas where the survey responses hint at an issue.
 
 ### Survey Form, Data and Source Code
+These are all available from GitHub:
+* [Survey form](https://github.com/arc12/Cetis-Analytics-Survey-2013/blob/master/survey%20form.pdf?raw=true) (pdf)
+* [Raw data] **to do**
+* [Source code](https://github.com/arc12/Cetis-Analytics-Survey-2013) for R. This is intended for processing the raw data using knitr, which is conveniently done using [RStudio](http://www.rstudio.com/)
