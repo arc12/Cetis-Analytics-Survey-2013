@@ -1,21 +1,50 @@
 Survey of the State of Analytics in UK Higher and Further Education Institutions 2013
 ========================================================
-Undertaken by Cetis in May and June 2013. +++ need to briefly summarise further
+Introduction
+------------
+An informal survey was undertaken by Cetis in May and June 2013. Subscribers to a number of email circulation lists - with members coming largely from institutional IT, administration and educational technology responsibilities - were invited to respond.
 
-Refer forwards to limitations, read-only version of the survey form, the data and R source code.
+The purpose of the survey was to:
+* Assess the current state of analytics in UK FE/HE.
+* Identify the challenges and barriers to using analytics.
 
-**This is a rough and ready set of stats and plots for initial exploration.**
+For the purpose of the survey, we defined our use of "analytics" to be the process of developing actionable insights through problem definition and the application of statistical models and analysis against existing and/or simulated future data. In practical terms it involves trying to find out things about an organisation, its products services and operations, to help inform decisions about what to do next.
 
+Various domains of decision-making are encompassed: the kinds of decision that is readily understood by a business-person, whatever their line of business; questions of an essentially educational character; and decisions relating to the management of research. The line of questioning was inclusive of these three perspectives. The questions asked were:  
+1. Which education sector do you work in (or with)?  
+2. What is your role in your institution?  
+3. In your institution which department(s) are leading institutional analytics activities and services?  
+4. In your institution, how aware are staff about recent developments in analytics?  
+5. Do the following roles use the results of statistical analysis such as correlation or significance testing rather than simple reporting of data in charts or tables?  
+6. Which of the following sources are used to supply data for analytics activities?  
+7. Which of the following data collection and analytics technologies are in place in your institution?  
+8. Please name the supplier/product of the principle software in use (e.g. IBM Cognos, SPSS, Tableau, Excel)  
+9. Which of the following staff capabilities are in place in your institution?  
+10a. What are the drivers for taking analytics based approaches in your institution?  
+10b. What are the current barriers for using of analytics in your institution?  
+
+
+The survey is informal in that:
+* no attempt was made to have a balanced sample, either in terms of institutional type or respondant role;
+* it relied on voluntary participation, so will suffer from selection bias;
+* multiple responses from a single institution may have occurred, but these cannot be identified;
+* we surveyed the knowledge of individuals rather than the actual state of an organisation.
+
+These facts, coupled with the small number of responses, means that the resulting data cannot be assumed to represent the true state of affairs but to be indicative. The report is written as a stimulus both for discussion and for more thorough investigation into some of the areas where the survey responses hint at an issue.
+
+>Terminology: a "response" is a single submission of the survey and an "item response" pertains to a single question.
+
+**This version is contains a number of plots created as part of an exploration of the data. A shorter version will be created for general distribution.**
 
 ```{r echo=FALSE}
 #settings
 echo.setting<-F #change this to hide all the source listings
 fw<-7 #default figure height
 fh<-7 #default figure width
-col.yndnk<-c("#d0d0d0","#3333ff","#ee7700") #bar colours - order is "dont know", "no", "yes"
+col.yndnk<-c("#ee7700","#3333ff","#d0d0d0") #bar colours - order is  "yes", "no", "dont know"
 col.yn<-c("#ee7700","#3333ff") #bar colours - order is yes, no
-col.awareness<-c("#3333ff","#33ff33","#ee7700","#d0d0d0") #bar colours - order is "not", "some", very", "dont know"
-col.stats<-c("#3333ff","#33ff33","#d0d0d0") #bar colours - order is "never", "some", "dont know"
+col.awareness<-c("#3333ff","#ffff33","#ee7700","#d0d0d0") #bar colours - order is "not", "some", very", "dont know"
+col.stats<-c("#3333ff","#ffff33","#d0d0d0") #bar colours - order is "never", "some", "dont know"
 col.staff<-rainbow(4, alpha=0.5)
 #libraries
 library("slam")
@@ -35,25 +64,23 @@ resp.count<-length(responses[,1])
 
 There are `r resp.count` responses.
 
-*Which education sector do you work in (or with)?*
-
 ```{r fig.width=fw, fig.height=fh, echo=echo.setting}
-table(responses[,"Q1.Sector"])
-pie(table(responses[,"Q1.Sector"]),main="Sector")
+pie(table(responses[,"Q1.Sector"]),main="Which education sector do you work in (or with)?")
 ```
 
-*What us your role in your institution?*
 
 ```{r fig.width=fw, fig.height=fh, echo=echo.setting}
 role_T<-table(responses[,"Q2.Role"])
-insideLabel.barplot(role_T[order(role_T)],Main="Role", Col=rainbow(n=length(role_T), alpha=0.5))
+insideLabel.barplot(role_T[order(role_T)],Main="What us your role in your institution?", Col=rainbow(n=length(role_T), alpha=0.5))
 ```
 
-What does "Don't Know" Look Like?
+Concerning the State of Knowledge
 ------
-For each question in a given response, a "don't know rating"" is calculated as the proportion of options within that question that were answered "I don't know". Question 3 contained no options so has a dont know rating of 0 or 1 only.
+The line of questioning sought the knowledge of the respondant and not the actual state of affairs in a given institution. Although this fact limits the extent to which responses can be interpreted in relation to the question as asked, it does allow us to form a picture of the way knowledge of analytics activities is distributed. We can form a response to the question: what does "don't know" look like?
 
-Calculate the mean don't know rating for each response and see what the distribution looks like.
+> Technical note: most questions contain multiple parts and for these a "don't know rating" is calculated as the proportion of parts within that question that were answered "I don't know". Question 3 contained no options so has a dont know rating of 0 or 1 only.
+
+The mean don't know rating for each response plotted as a histogram to inspect the distribution. 
 
 ```{r echo=echo.setting}
 dont.know.cols<-responses[,c("Q3.Leading.Dont.Know","Q4.Awareness.Dont.know.ratio","Q5.Use.Stats.Dont.know.ratio","Q6.Sources.Dont.know.ratio","Q7.Technologies.Dont.know.ratio","Q9.Staff.Dont.know.ratio")]
@@ -63,13 +90,18 @@ hist(dont.know.sums)
 summary(dont.know.sums)
 ```
 
-How did the state of unknowing vary between questions? Consider the mean over all responses for each question.
+The median value of 0.313 indicates that half of the sample had more than around 31%  "don't know" item responses. The 1st quartile of 0.171 indicates that 25% of the responses had around 17% or less "don't know" item responses. The conclusion is clearly that there is a lot of uncertainty. This is particularly striking because the respondants were self-selecting; it would be expected the people with the least knowledge would not respond.
+
+The state of unknowing varies between questions? The following plot shows the mean over all responses for each question.
 
 ```{r fig.width=fw, fig.height=fh, echo=echo.setting}
 insideLabel.barplot(col_sums(dont.know.cols),Main="Per-question Don't Know Level")
 ```
 
-A quick look to see if "don't know" for different questions appears to correlate
+This seems to indicate that there is a better awareness that there is something going on, both within the institution and generally (questions 3 and 4) than there is about the way an institutional response is being implemented (questions 5, 6, 7, 9). A more detailed analysis appears to indicate that questions 5 and 6 are a particular hot-spot of uncertainty, with a probable cluster of responses where the item responses for both questions were "don't know" whereas other items responses where known. In many cases, uncertainty is spread over many questions without any pattern being evident.
+
+### Digging Deeper - patterns of "don't know" and correlation
+An exploratory look to see if "don't know" for different questions appears to correlate.
 
 ```{r fig.width=fw, fig.height=fh, echo=echo.setting}
 plot(dont.know.cols)
@@ -77,7 +109,7 @@ plot(dont.know.cols)
 
 Not really, although a hint between questions 5,6, and 7.
 
-Clustering. Silohette width (0.5-0.7 => reasonable structire), (0.25-0.5 => weak structure, may be artificial).
+Clustering will be undertaken using the method of partitioning around medoids. This involves the selection of a given number of clusters, and the algorithmic determination of where the centre-point of these clusters are and the cluster to which each point belongs. The quality of clustering is judged using silouhette plots[1]. As a rule of thumb, a silouhette width of 0.5-0.7 is assumed to indicate a reasonable structure and values in the range 0.25-0.5 to indicate a weak structure that may be artificial. The average silhouette width can be used to indicate the overall quality of the clustering and the silhouette width of individual data points can be used to assess the quality of match of that point to the cluster, i.e. its similarity to the medoid it has been assiged compared to other medoids. In the following plots it is evident that the data cannot be described as comprising clusters but that there are sub-sets where several records are similar.
 
 ```{r fig.width=fw, fig.height=fh, echo=echo.setting}
 #http://www.unesco.org/webworld/idams/advguide/Chapt7_1_1.htm
@@ -93,7 +125,7 @@ Clusters are centerd around (medoids have >0.5 weighting for the questions calle
 ```
 
 
-3 or 4 clusters look better on the plot but look at the silohette values.
+3 or 4 clusters look better on the plot but look at the silhouette values.
 
 ```{r fig.width=fw, fig.height=fh, echo=echo.setting}
 dnk.pam3<-pam(dont.know.cols,3)
@@ -117,23 +149,9 @@ Clusters are centerd at:
    apply(medoids, MARGIN=1, function(x){paste(names(x[x>0]), collapse=", ")})
 ```
 
-Who didn't know the most (dont know mean ratio >= 3rd quartile)
-
-```{r fig.width=fw, fig.height=fh, echo=echo.setting}
-upper.quartile.ratio<-quantile(dont.know.sums,0.75)
-dont.know.most.responses<-responses[dont.know.sums>=upper.quartile.ratio,]
-#pie(table(factor(dont.know.most.responses[,"Q2.Role"])), main="proportion of the unknowing")
-pc.by.role<-table(dont.know.most.responses[,"Q2.Role"])/table(responses[,"Q2.Role"])*100
-insideLabel.barplot(pc.by.role[order(pc.by.role)],Main="% of each Role Type who are in the most-unknowing group",Ylab="", Col=rainbow(n=length(pc.by.role), alpha=0.5))
-```
-
-There are `r length(dont.know.most.responses[,1])` respondants in this group; the small sample indicates any conclusions should be highly tentative. 
-
-The low levels of awareness in some stakeholder groups is remarkable and potentially a matter of concern because it implies that there is a lack of cross-institutional dialogue. 
-
-Leading the Charge
+Leadership of Analytics Activies
 ------
-*In your institution which department(s) are leading institutional analytics activities and services?*
+*In your institution which department(s) are leading institutional analytics activities and services? (multiple selection was possible)*
 
 ```{r fig.width=fw, fig.height=fh, echo=echo.setting}
 leading<-responses[,5:10]
@@ -144,18 +162,14 @@ leading_S<-leading_S[order(leading_S, decreasing=F)]
 insideLabel.barplot(leading_S,"Q3 Leading Analytics", Col=rev(heat.colors(n=length(leading_S), alpha=0.5)))
 ```
 
-Other comprises
+The dominant leaders reflect the centres for key institutional data and the IT services to handle it. There were only `r leading.dont.know.sum` "don't know" responses and the "other" item responses show some partial overlap with the specified categories:
 ```{r echo=echo.setting}
 responses[leading[,6]>=1,"Q3.Leading.Text"]
 ```
-There were `r leading.dont.know.sum` "don't know" responses.
 
 Awareness
 -----
-*In your institution, how aware are staff about recent developments in analytics?*
-Multiple options were permitted per response.
-
-These results are biassed because of the distribution of backgrounds of respondants. Given the proportion of don't know responses varies upwards from 20%, the real picture may be quite different. Note, for example, that the least well represented groups (teaching and researcher management) have the largest "don't know" responses, up to 40%.
+*In your institution, how aware are staff about recent developments in analytics? (6 sub-questions, according to staff role)*
 
 ```{r echo=echo.setting}
 awareness<-responses[,12:17]
@@ -163,26 +177,14 @@ awareness_T<-sapply(awareness, function(x){table(ordered(x, levels=c("Not at all
 colnames(awareness_T)<-tidy.colnames(awareness_T,"Q4.Awareness")
 ```
 
-Aggregate over all staff groups (`r paste(tidy.colnames(awareness,"Q4.Awareness"), collapse=", ")`) and plot the awareness distribution. 
+An impression of the general level of awareness is given by summation over all staff roles given in the question: (`r paste(tidy.colnames(awareness,"Q4.Awareness"), collapse=", ")`).
 
 ```{r fig.width=fw, fig.height=fh, echo=echo.setting}
 awareness_Agg<-apply(awareness_T, MARGIN=1, sum)
-pie(awareness_Agg, main="Q4 Staff Awareness Across All Groups")
+pie(awareness_Agg, main="Q4 Staff Awareness Across All Groups", col=col.awareness)
 ```
 
-Plot the number of responses of "very aware" for each staff group and, on a separate plot, numbers for "not aware".
-
-```{r fig.width=fw, fig.height=fh, echo=echo.setting}
-veryAware<-awareness_T["Very aware",]
-insideLabel.barplot(veryAware[order(veryAware)], Main="\"Very Aware\" Groups", Ylab="Responses")
-```
-
-```{r fig.width=fw, fig.height=fh, echo=echo.setting}
-notAware<-awareness_T["Not at all",]
-insideLabel.barplot(notAware[order(notAware)], Main="\"Not Aware\" Groups", Ylab="Responses")
-```
-
-Or maybe enough can be gleaned from a composite bar plot, ordered by increasing number of "Very aware" responses:
+A stacked bar plot, ordered by increasing number of "Very aware" responses, shows the different levels of perceived awareness within each staff grop:
 
 ```{r fig.width=fw, fig.height=fh, echo=echo.setting}
 op<-par(mar = c(9,4,4,2) +0.1)
@@ -190,12 +192,13 @@ barplot(awareness_T[,order(awareness_T["Very aware",])], col=col.awareness, las=
 legend(x=4.5,y=11,rev(rownames(awareness_T)), fill=rev(col.awareness), cex=0.8, bg="#ffffff")
 par(op)
 ```
+These results are likely to be biassed because of the distribution of backgrounds of respondants and this may mean that we should not assume the item responses that were not "don't know" are representative.
 
-
+The tentative conclusion seems to be that, unlike many initiatives with a strong data and IT element, executive management awareness is strong. In general, the management and support roles appear to be more aware than the academic staff but the similarity between IT and library staff may not have been expected. This data suggests anyone planning to develop analytics at an institutional or sectoral level should not make too many assumptions about awareness, rather they should investigate the state.
 
 Use of Statistical Analysis
------
-*Do the following roles use the results of statistical analysis such as correlation or significance testing rather than simple reporting of data in charts or tables?*
+-------
+*Do the following roles use the results of statistical analysis such as correlation or significance testing rather than simple reporting of data in charts or tables? (7 sub-questions. according to staff role)*
 
 ```{r echo=echo.setting}
 statAnal<-responses[,20:26]
@@ -203,16 +206,16 @@ statAnal_T<-sapply(statAnal, function(x){table(ordered(x, levels=c("Never","Some
 colnames(statAnal_T)<-tidy.colnames(statAnal_T,"Q5.Use.Stats")
 ```
 
-Aggregate over all staff groups (`r paste(colnames(statAnal_T), collapse=", ")`) and plot the distribution. 
+Summation over all staff groups (`r paste(colnames(statAnal_T), collapse=", ")`) allows us to capture the overall impression. 
 
 ```{r fig.width=fw, fig.height=fh, echo=echo.setting}
 statAnal_Agg<-apply(statAnal_T, MARGIN=1, sum)
-pie(statAnal_Agg, main="Q5 Use of Statistical Analysis Across All Groups")
+pie(statAnal_Agg, main="Q5 Use of Statistical Analysis Across All Groups", col=col.stats)
 ```
 
-The general levels of "don't know" are really rather high. What does this tell us? Probably that the reports and verbal communications do not refer to this kind of analysis and hence that it is not occurring. Arguably, this kind of analysis is necessary in order to decide whether the tables of data and charts really signify a compelling case for action exists. It may also be the case, however, that this kind of analysis is being done but hidden.
+The general levels of "don't know" are really rather high. What does this tell us? Probably that reports and verbal communications do not refer to this kind of analysis. Whether this means that it is not occurring or that it is being done and not communicated would require further investigation. Arguably, whichever is the case we should be concerned; this kind of analysis is often necessary to decide whether the tables of data and charts really signify a compelling case for action. Furthermore, wider use of these well-established and routine statistical methods within an institution should probably precede use of more advanced predictive methods.
 
-The pattern is pretty similar across all roles with exceptionm of facilities/estates and finance/purchasing. Is this real? Actually, these are probably the ones where this is most easy to do without worrying about the complexity/subtlety of teaching and learning or the uncertainties in external environmental factors.
+The following plot drills down into the roles and shows that the pattern is pretty similar across all roles with exception of facilities/estates and finance/purchasing. This is unexpected since these areas are the ones where this is most easy to do without the complexity/subtlety of teaching and learning or the uncertainties in external strategic factors; this may be an artefact of the respondant population.
 
 ```{r fig.width=fw, fig.height=fh, echo=echo.setting}
 op<-par(mar = c(9,4,4,2) +0.1)
@@ -223,70 +226,65 @@ par(op)
 
 Sources of Data
 -----
+*Which of the following sources are used to supply data for analytics activities? (11 sub-questions, according to data source)*
+
 Again, we must be cautious about interpreting the results; there is a large "don't know" fraction and the distribution of respondant roles/departments will have introduced bias that cannot reasonably be estimated.
 
-Plot all the data on a single (mult-column) bar chart.
+The data is ordered according to the number of "yes" responses for each sub-question and shown in the following chart. Sector data includes data from the national student survey, HESA, UCAS etc.
 
 ```{r fig.width=fw, fig.height=fh, echo=echo.setting}
 dataSources<-responses[,29:39]
 colnames(dataSources)<-tidy.colnames(dataSources,"Q6.Sources")
-dataSources_T<-sapply(dataSources, table)
+dataSources_T<-sapply(dataSources, function(x){table(ordered(x, levels=c("Yes","No","I don't know")))})
+dataSources_T<-dataSources_T*100/resp.count
 op <- par(mar = c(10, 4, 4, 2) + 0.1)
-barplot(dataSources_T, beside=T, col=col.yndnk, las=2, cex.names=0.8, main="Q6 Which Data Sources are Used?", ylab="Responses")
-legend(x=28, y=21, rownames(dataSources_T), fill=col.yndnk, cex=0.8)
+barplot(dataSources_T[,order(dataSources_T["Yes",], decreasing=T)], beside=F, col=col.yndnk, las=2, cex.names=0.8, main="Q6 Which Data Sources are Used?", ylab="% Responses")
+legend(x=8.5, y=92, rev(rownames(dataSources_T)), fill=rev(col.yndnk), cex=1.0, bg="#ffffff")
 par(op)
 ```
 
+Although we should be cautious in assuming anything about the actual situation that the "don't know" responses mask - for example that the don't know fraction can be assumed to be "no" or that it can be assumed to have the same proportion of "yes" and "no" as these definitive responses - this plot suggests a few provisional comments:
+* VLE data is widely used yet it only gives a partial and ambiguous view on learner activity. Given the apparent lack of use of even basic statistical methods, are we being over-confident about the value of this data?
+* Collectively, VLE, attendance, and library data would give a more balanced picture of engagement yet the second two are much less widely used.
+* Given the availability of sector data, what is the explanation that only half of the responses indicated it is used?
+* The apparently low use of labour market data may be a missed opportunity.
+
 Technologies in Place
 -----
-Although the faction of "don't know" resonses is also quite high for technologies in place, there is rather more consistency across the different options given in the question. The least commonly used technologies are, however, those with the largest number of "don't know" responses and it is plausible that some "don't know" responses for "predicitive analytics" occurred because the term is imprecise.
-
-
+*Which of the following data collection and analytics technologies are in place in your institution? (5 sub-questions, according to technology)*
 ```{r echo=echo.setting}
 techs<-responses[,42:46]
 #a fix-up because there are no "Yes" responses, which would lead to techs_T being a list since the results of apply would not be of equal length.
 techs_T<-sapply(techs, function(x){table(ordered(x, levels=c("Yes","No","I don't know")))})
-
-#levels(techs[,2])<-c(levels(techs[,2]),"Yes","No","I don't know")# A more robust line of code would apply this fix to all columns
+techs_T<-techs_T*100/resp.count
 colnames(techs_T)<-tidy.colnames(techs_T,"Q7.Technologies")
-#techs_T<-sapply(techs, table)
-techs_T.yn<-techs_T[c("Yes","No"),]
-techs_T.ynr<-100*t(t(techs_T.yn)/col_sums(techs_T.yn))
-#re-order so that the greatest proportion of "yes" appears on RHS
-asc.order<-order(techs_T.ynr["Yes",])
-techs_T.ynr<-techs_T.ynr[,asc.order]
-techs_T<-techs_T[,asc.order]
+#techs_T.yn<-techs_T[c("Yes","No"),]
+#techs_T.ynr<-100*t(t(techs_T.yn)/col_sums(techs_T.yn))
+#re-order so that the greatest proportion of "yes" appears on LHS
+techs_T<-techs_T[,order(techs_T["Yes",], decreasing=T)]
 ```
 
-Proportion of "don't know".
-
-
-```{r fig.width=fw, fig.height=fh, echo=echo.setting}
-insideLabel.barplot(techs_T["I don't know",], Main="Q7 Technologies - \"Don't Know\" Responses")
-```
-
-We will assume that the relative proportion of yes/no responses gives an approximate estimate of the proportion of institutions that actually employ these technologies.
 
 ```{r fig.width=fw, fig.height=fh, echo=echo.setting}
 op <- par(mar = c(8, 4, 4, 2) + 0.1)
-barplot(techs_T.ynr, las=2, cex.names=0.9, col=col.yn, main="Q7 Which Technologies are in Place?", ylab="Estimated Approximate Proportion")
-legend(x=0.28,y=97,c("Yes","No"), cex=1.0, fill=col.yn, bg="#ffffff")
+barplot(techs_T, las=2, cex.names=0.9, col=col.yndnk, main="Q7 Which Technologies are in Place?", ylab="% Responses")
+legend(x=4, y=92, rev(rownames(techs_T)), fill=rev(col.yndnk), cex=1.0, bg="#ffffff")
 par(op)
 ```
 
-Manual tabulation from free text entries for suppliers with >1 reference. More than 1 supplier may have been specified in a response.
+Although the fraction of "don't know" resonses is also quite high for technologies in place, as it was for data sources, there is  consistency across the more common options given in the question: data visualisation, dashboards and data wharehouses. The less commonly used technologies are those with the largest number of "don't know" responses although it is plausible that some "don't know" responses for "predicitive analytics" occurred because the term is imprecise. As before, we should not assume that the relative proportion of yes/no responses gives an approximate estimate of the proportion of institutions that actually employ these technologies. For data visualisation and dashboards, it might be reasonable to assume that many "don't know" responses should be substituted with "no", given that these are user-facing manifestations of analytics.
+
+Survey respondants were asked to provide information about products/suppliers as textual item responses. Each response could contain any number of product names. The following plot shows the number of item responses for products that were named two or more times. More than 1 supplier may have been specified in a response.
 
 ```{r fig.width=fw, fig.height=fh, echo=echo.setting}
 suppliers<-list(Excel=8, SPSS=4, Cognos=2, Tableau=3, Google.Analytics=2, Qlikview=2)
-insideLabel.barplot(unlist(suppliers), Main="Q7 Technology Suppliers", Ylab="Responses")
+insideLabel.barplot(unlist(suppliers), Main="Q7 Technology Products/Suppliers", Ylab="Responses")
 ```
-There are `r resp.count` responses.
-
-SPSS is now part of the IBM Cognos offering, although it may be used
+SPSS is now part of the IBM Cognos offering, although it may be used independently of the suite.
 
 Staff Capabilities
 --------
-The respnses for staff capabilities show some patterns but also plausible evidence that the options may have lacked clarity. In particular, it is possible that the responses indicating more than 10 statisticians refer to academic statisticians rather than statisticians in a business support role. "Data Scientist" is likely to be an unfamiliar term to anyone who has not been following business analytics punditry in which it is proclaimed as a new profession. A large number of "don't know" and "no", is in keeping with its newness as a concept and as a term. Two responses indication more than 10 data scientists possibly reflects two responses from one institution at the forefront of this field.
+The respnses for staff capabilities show some patterns but also plausible evidence that the survey options may have lacked clarity. In particular, it is possible that the responses indicating more than 10 statisticians refer to academic statisticians rather than statisticians in a business support role. "Data Scientist" is likely to be an unfamiliar term to anyone who has not been following the technology media. A large number of "don't know" and "no", is in keeping with its newness as a concept and as a term. The two responses indicating more than 10 data scientists possibly reflects two responses from one institution at the forefront of this field.
 
 ```{r fig.width=fw, fig.height=fh, echo=echo.setting}
 staff<-responses[,50:53]
@@ -300,56 +298,60 @@ legend(x=1,y=15,colnames(staff), cex=0.8, fill=col.staff)
 par(op)
 ```
 
-A high proportion of responses indicate enthusiasts outnumber the categories of technical experts but the distribution is surprising (few responses of "5-10"). It may be significant that respondants felt most confident of their knowledge of this staff capability.
+A high proportion of responses indicate enthusiasts outnumber the categories of technical experts but the distribution is surprising (few responses of "5-10"). It may be significant that respondants felt most confident of their knowledge of data enthusiasts.
 
 Drivers for Analytics
 -----
-Multiple drivers were possible in a single response.
+*What are the drivers for taking analytics based approaches in your institution? (multiple selection was possible)*
 
 ```{r fig.width=fw, fig.height=fh, echo=echo.setting}
 drivers<-responses[,57:66]
 colnames(drivers)<-tidy.colnames(drivers,"Q10a.Drivers")
 drivers<-col_sums(drivers)
-drivers<-drivers[order(drivers, decreasing=F)]
-col.drivers<-rev(heat.colors(length(drivers), alpha=0.5))
-insideLabel.barplot(drivers, Main="Q10 Drivers for Analytics", Col=col.drivers)
+drivers<-drivers[order(drivers, decreasing=T)]
+drivers<-drivers*100/resp.count
+col.drivers<-heat.colors(length(drivers), alpha=0.5)
+insideLabel.barplot(drivers, Main="Q10 Drivers for Analytics", Col=col.drivers, Ylab="% Responses")
 ```
 
-Low value for research excellence may reflect the survey group, which contains an unknown number of responses from research intensive institutions.
-
-Recruitment may be a blind-spot.
-
-Resource utilisation (excluding "human resource") is another candidate.
+The survey responses match the topics typically discussed in the literature on analytics in universities and colleges. The following suggested drivers attracted lower levels of positive response than they may deserve:
+* The low value for research excellence may reflect the survey group, which contains few particpants with research management responsibility and an unknown number of responses from research intensive institutions.
+* Student recruitment seems to be a missed opportunity. The 50% response rate for this driver should be verified.
+* Resource utilisation (excluding "human resource") is another candidate for verification. If the <60% rate is correct, it suggests opportunities for efficiency savings are being missed in too many institutions.
 
 Barriers to Adoption
 -----
-Multiple barriers were possible in a single response.
+*What are the current barriers for using of analytics in your institution? (multiple selection was possible)*
 
 ```{r fig.width=fw, fig.height=fh, echo=echo.setting}
 barriers<-responses[,68:75]
 colnames(barriers)<-tidy.colnames(barriers,"Q10b.Barriers")
 barriers_S<-col_sums(barriers)
-barriers_S<-barriers_S[order(barriers_S, decreasing=F)]
-col.barriers<-rev(heat.colors(length(barriers_S), alpha=0.5))
-insideLabel.barplot(barriers_S, Main="Q10 Barriers to Adoption", Col=col.barriers)
+barriers_S<-barriers_S[order(barriers_S, decreasing=T)]
+barriers_S<-barriers_S*100/resp.count
+col.barriers<-heat.colors(length(barriers_S), alpha=0.5)
+insideLabel.barplot(barriers_S, Main="Q10 Barriers to Adoption", Col=col.barriers, Ylab="% Responses")
 ```
 
-How many responses only gave "other"?
+Bearing in mind that survey respondants were self-selecting, and so may have been disproportionately positive in their attitude towards analytics, the results seem to indicate that several common barriers to IT and data based initiatives arising from the attitude of people are not prevalent. The issue of lack of senior management report, which is often seen as a significant challenge, is not a major factor. This matches the earlier-noted level of awareness that is perceived among executive management. Staff and student acceptance is also not seen as an issue. This may be due to there being little practical effect on day-to-day teaching, learning, research, and support from implementing analytics.
 
+Whereas the attitude of people is not generally perceived as a barrier, both IT and analytical capabilities are. Among the respondants, there is a slightly greater sense that the analytical capabilities - specialised analysts and training - are common barriers than IT-related aspects - standardised data and IT resources.
+
+A more detailed inspection shows some evidence that the IT and analytical barriers occur together whereas the attitude-based barriers are apparently randomly distributed. Three respondants only identified specialised analysis and training as barriers. No reponse identified zero barriers.
+
+Repondants who stated "other" supplied: "time", "enough staff resources and priority to drive forward", "No idea, as we aren't there yet", and three counts where the field was left empty.
+
+### Digging Deeper - patterns among barriers
 Look for clusters.
 
-A pale colour indicates the row and column are associated. The more pale, the more concentrated the association. From this, we can see that 5 responses only gave "other" while a further "other (response 12) occurred with 3 other options."
+A pale colour indicates the row and column are associated. The more pale, the more concentrated the association. From this, we can see that 5 responses only gave "other" while a further "other (response 12) occurred with 3 other options." These form an inevitable and redundant cluster given the nature of the survey.
 
 ```{r fig.width=fw, fig.height=fh, echo=echo.setting}
 heatmap(as.matrix(barriers), margin=c(9,4), ylab="Response  No.")
 #heatmap.2(as.matrix(barriers), margin=c(7,4), ylab="Response  No.", dendrogram="none", key=F, trace="both")
 ```
 
-Repondants who stated "other" supplied: "time", "enough staff resources and priority to drive forward", "No idea, as we aren't there yet", and three counts where the field was left empty.
-
-
 Try 2 clusters:
-
 ```{r fig.width=fw, fig.height=fh, echo=echo.setting}
    barriers.pam<-pam(barriers,2)
    plot(barriers.pam)
@@ -361,6 +363,8 @@ Clusters are centerd at:
    medoids<-barriers.pam$medoids
    apply(medoids, MARGIN=1, function(x){paste(names(x[x==1]), collapse=", ")})
 ```
+
+The cluster for "other" is redundant information, as noted earlier.
 
 Try 3 clusters:
 
@@ -396,19 +400,17 @@ Column names
 colnames(responses)
 ```
 
-Caveats and Technical Notes
-### Limitations of the Survey, Constraints on the Analysis
-(introduce and amplify/explain these)
-* selection bias
-* possibility of multiple responses from a single institution
-* ambiguity of terminology
-* small number of responses
-* surveyed the knowledge of individuals rather than the actual state of an organisation
-
-Consequently, the analysis in this report is not to be taken as representing the truth but as being indicative and containing a taint of subjectivity. The report is written as a stimulus both for discussion and for more thorough investigation into some of the areas where the survey responses hint at an issue.
+Supplementary Information
+------
+This report was produced by Adam Cooper and the survey was developed by Li Yuan and Stephen Powell. All are members of Cetis and the work was supported by Jisc. It is licensed using the Creative Commons Attribution Licence: http://creativecommons.org/licenses/by/3.0/.
 
 ### Survey Form, Data and Source Code
 These are all available from GitHub:
-* [Survey form](https://github.com/arc12/Cetis-Analytics-Survey-2013/blob/master/survey%20form.pdf?raw=true) (pdf)
-* [Raw data] **to do**
-* [Source code](https://github.com/arc12/Cetis-Analytics-Survey-2013) for R. This is intended for processing the raw data using knitr, which is conveniently done using [RStudio](http://www.rstudio.com/)
+* [Survey form](https://github.com/arc12/Cetis-Analytics-Survey-2013/blob/master/survey%20form.pdf?raw=true) (PDF)
+* [Raw data](https://github.com/arc12/Cetis-Analytics-Survey-2013/blob/master/Cetis%20Analtyics%20Survey%202013%20(Anonymised%20Cleaned%20Responses%20III).csv) (CSV)
+* [Source code](https://github.com/arc12/Cetis-Analytics-Survey-2013) for R[2] with the cluster package[3]. This is intended for processing the raw data using knitr, which is conveniently done using [RStudio](http://www.rstudio.com/)
+
+### References
+[1]: Peter J. Rousseeuw (1987). Silhouettes: A graphical aid to the interpretation and validation of cluster analysis, Journal of Computational and Applied Mathematics, Volume 20, November 1987, Pages 53-65, ISSN 0377-0427, http://dx.doi.org/10.1016/0377-0427(87)90125-7  
+[2]: R Core Team (2012). R: A language and environment for statistical computing. R Foundation for Statistical Computing, Vienna, Austria. ISBN 3-900051-07-0  
+[3]: Maechler, M., Rousseeuw, P., Struyf, A., Hubert, M., Hornik, K.(2013).  cluster: Cluster Analysis Basics and Extensions. R package version 1.14.4
