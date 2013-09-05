@@ -25,7 +25,7 @@ Various domains of decision-making are encompassed: the kinds of decision that i
 
 
 The survey is informal in that:
-* no attempt was made to have a balanced sample, either in terms of institutional type or respondant role;
+* no attempt was made to have a balanced sample, either in terms of institutional type or respondent role;
 * it relied on voluntary participation, so will suffer from selection bias;
 * multiple responses from a single institution may have occurred, but these cannot be identified;
 * we surveyed the knowledge of individuals rather than the actual state of an organisation.
@@ -76,7 +76,7 @@ insideLabel.barplot(role_T[order(role_T)],Main="What us your role in your instit
 
 Concerning the State of Knowledge
 ------
-The line of questioning sought the knowledge of the respondant and not the actual state of affairs in a given institution. Although this fact limits the extent to which responses can be interpreted in relation to the question as asked, it does allow us to form a picture of the way knowledge of analytics activities is distributed. We can form a response to the question: what does "don't know" look like?
+The line of questioning sought the knowledge of the respondent and not the actual state of affairs in a given institution. Although this fact limits the extent to which responses can be interpreted in relation to the question as asked, it does allow us to form a picture of the way knowledge of analytics activities is distributed. We can form a response to the question: what does "don't know" look like?
 
 > Technical note: most questions contain multiple parts and for these a "don't know rating" is calculated as the proportion of parts within that question that were answered "I don't know". Question 3 contained no options so has a dont know rating of 0 or 1 only.
 
@@ -90,7 +90,7 @@ hist(dont.know.sums)
 summary(dont.know.sums)
 ```
 
-The median value of 0.313 indicates that half of the sample had more than around 31%  "don't know" item responses. The 1st quartile of 0.171 indicates that 25% of the responses had around 17% or less "don't know" item responses. The conclusion is clearly that there is a lot of uncertainty. This is particularly striking because the respondants were self-selecting; it would be expected the people with the least knowledge would not respond.
+The median value of 0.313 indicates that half of the sample had more than around 31%  "don't know" item responses. The 1st quartile of 0.171 indicates that 25% of the responses had around 17% or less "don't know" item responses. The conclusion is clearly that there is a lot of uncertainty. This is particularly striking because the respondents were self-selecting; it would be expected the people with the least knowledge would not respond.
 
 The state of unknowing varies between questions? The following plot shows the mean over all responses for each question.
 
@@ -149,7 +149,7 @@ Clusters are centerd at:
    apply(medoids, MARGIN=1, function(x){paste(names(x[x>0]), collapse=", ")})
 ```
 
-Leadership of Analytics Activies
+Leadership of Analytics Activities
 ------
 *In your institution which department(s) are leading institutional analytics activities and services? (multiple selection was possible)*
 
@@ -192,7 +192,7 @@ barplot(awareness_T[,order(awareness_T["Very aware",])], col=col.awareness, las=
 legend(x=4.5,y=11,rev(rownames(awareness_T)), fill=rev(col.awareness), cex=0.8, bg="#ffffff")
 par(op)
 ```
-These results are likely to be biassed because of the distribution of backgrounds of respondants and this may mean that we should not assume the item responses that were not "don't know" are representative.
+These results are likely to be biassed because of the distribution of backgrounds of respondents and this may mean that we should not assume the item responses that were not "don't know" are representative.
 
 The tentative conclusion seems to be that, unlike many initiatives with a strong data and IT element, executive management awareness is strong. In general, the management and support roles appear to be more aware than the academic staff but the similarity between IT and library staff may not have been expected. This data suggests anyone planning to develop analytics at an institutional or sectoral level should not make too many assumptions about awareness, rather they should investigate the state.
 
@@ -215,7 +215,7 @@ pie(statAnal_Agg, main="Q5 Use of Statistical Analysis Across All Groups", col=c
 
 The general levels of "don't know" are really rather high. What does this tell us? Probably that reports and verbal communications do not refer to this kind of analysis. Whether this means that it is not occurring or that it is being done and not communicated would require further investigation. Arguably, whichever is the case we should be concerned; this kind of analysis is often necessary to decide whether the tables of data and charts really signify a compelling case for action. Furthermore, wider use of these well-established and routine statistical methods within an institution should probably precede use of more advanced predictive methods.
 
-The following plot drills down into the roles and shows that the pattern is pretty similar across all roles with exception of facilities/estates and finance/purchasing. This is unexpected since these areas are the ones where this is most easy to do without the complexity/subtlety of teaching and learning or the uncertainties in external strategic factors; this may be an artefact of the respondant population.
+The following plot drills down into the roles and shows that the pattern is pretty similar across all roles with exception of facilities/estates and finance/purchasing. This is unexpected since these areas are the ones where this is most easy to do without the complexity/subtlety of teaching and learning or the uncertainties in external strategic factors; this may be an artefact of the respondent population.
 
 ```{r fig.width=fw, fig.height=fh, echo=echo.setting}
 op<-par(mar = c(9,4,4,2) +0.1)
@@ -228,7 +228,7 @@ Sources of Data
 -----
 *Which of the following sources are used to supply data for analytics activities? (11 sub-questions, according to data source)*
 
-Again, we must be cautious about interpreting the results; there is a large "don't know" fraction and the distribution of respondant roles/departments will have introduced bias that cannot reasonably be estimated.
+Again, we must be cautious about interpreting the results; there is a large "don't know" fraction and the distribution of respondent roles/departments will have introduced bias that cannot reasonably be estimated.
 
 The data is ordered according to the number of "yes" responses for each sub-question and shown in the following chart. Sector data includes data from the national student survey, HESA, UCAS etc.
 
@@ -272,9 +272,9 @@ legend(x=4, y=92, rev(rownames(techs_T)), fill=rev(col.yndnk), cex=1.0, bg="#fff
 par(op)
 ```
 
-Although the fraction of "don't know" resonses is also quite high for technologies in place, as it was for data sources, there is  consistency across the more common options given in the question: data visualisation, dashboards and data wharehouses. The less commonly used technologies are those with the largest number of "don't know" responses although it is plausible that some "don't know" responses for "predicitive analytics" occurred because the term is imprecise. As before, we should not assume that the relative proportion of yes/no responses gives an approximate estimate of the proportion of institutions that actually employ these technologies. For data visualisation and dashboards, it might be reasonable to assume that many "don't know" responses should be substituted with "no", given that these are user-facing manifestations of analytics.
+Although the fraction of "don't know" responses is also quite high for technologies in place, as it was for data sources, there is  consistency across the more common options given in the question: data visualisation, dashboards and data warehouses. The less commonly used technologies are those with the largest number of "don't know" responses although it is plausible that some "don't know" responses for "predictive analytics" occurred because the term is imprecise. As before, we should not assume that the relative proportion of yes/no responses gives an approximate estimate of the proportion of institutions that actually employ these technologies. For data visualisation and dashboards, it might be reasonable to assume that many "don't know" responses should be substituted with "no", given that these are user-facing manifestations of analytics.
 
-Survey respondants were asked to provide information about products/suppliers as textual item responses. Each response could contain any number of product names. The following plot shows the number of item responses for products that were named two or more times. More than 1 supplier may have been specified in a response.
+Survey respondents were asked to provide information about products/suppliers as textual item responses. Each response could contain any number of product names. The following plot shows the number of item responses for products that were named two or more times. More than 1 supplier may have been specified in a response.
 
 ```{r fig.width=fw, fig.height=fh, echo=echo.setting}
 suppliers<-list(Excel=8, SPSS=4, Cognos=2, Tableau=3, Google.Analytics=2, Qlikview=2)
@@ -298,7 +298,7 @@ legend(x=1,y=15,colnames(staff), cex=0.8, fill=col.staff)
 par(op)
 ```
 
-A high proportion of responses indicate enthusiasts outnumber the categories of technical experts but the distribution is surprising (few responses of "5-10"). It may be significant that respondants felt most confident of their knowledge of data enthusiasts.
+A high proportion of responses indicate enthusiasts outnumber the categories of technical experts but the distribution is surprising (few responses of "5-10"). It may be significant that respondents felt most confident of their knowledge of data enthusiasts.
 
 Drivers for Analytics
 -----
@@ -315,7 +315,7 @@ insideLabel.barplot(drivers, Main="Q10 Drivers for Analytics", Col=col.drivers, 
 ```
 
 The survey responses match the topics typically discussed in the literature on analytics in universities and colleges. The following suggested drivers attracted lower levels of positive response than they may deserve:
-* The low value for research excellence may reflect the survey group, which contains few particpants with research management responsibility and an unknown number of responses from research intensive institutions.
+* The low value for research excellence may reflect the survey group, which contains few participants with research management responsibility and an unknown number of responses from research intensive institutions.
 * Student recruitment seems to be a missed opportunity. The 50% response rate for this driver should be verified.
 * Resource utilisation (excluding "human resource") is another candidate for verification. If the <60% rate is correct, it suggests opportunities for efficiency savings are being missed in too many institutions.
 
@@ -333,13 +333,13 @@ col.barriers<-heat.colors(length(barriers_S), alpha=0.5)
 insideLabel.barplot(barriers_S, Main="Q10 Barriers to Adoption", Col=col.barriers, Ylab="% Responses")
 ```
 
-Bearing in mind that survey respondants were self-selecting, and so may have been disproportionately positive in their attitude towards analytics, the results seem to indicate that several common barriers to IT and data based initiatives arising from the attitude of people are not prevalent. The issue of lack of senior management report, which is often seen as a significant challenge, is not a major factor. This matches the earlier-noted level of awareness that is perceived among executive management. Staff and student acceptance is also not seen as an issue. This may be due to there being little practical effect on day-to-day teaching, learning, research, and support from implementing analytics.
+Bearing in mind that survey respondents were self-selecting, and so may have been disproportionately positive in their attitude towards analytics, the results seem to indicate that several common barriers to IT and data based initiatives arising from the attitude of people are not prevalent. The issue of lack of senior management report, which is often seen as a significant challenge, is not a major factor. This matches the earlier-noted level of awareness that is perceived among executive management. Staff and student acceptance is also not seen as an issue. This may be due to there being little practical effect on day-to-day teaching, learning, research, and support from implementing analytics.
 
-Whereas the attitude of people is not generally perceived as a barrier, both IT and analytical capabilities are. Among the respondants, there is a slightly greater sense that the analytical capabilities - specialised analysts and training - are common barriers than IT-related aspects - standardised data and IT resources.
+Whereas the attitude of people is not generally perceived as a barrier, both IT and analytical capabilities are. Among the respondents, there is a slightly greater sense that the analytical capabilities - specialised analysts and training - are common barriers than IT-related aspects - standardised data and IT resources.
 
-A more detailed inspection shows some evidence that the IT and analytical barriers occur together whereas the attitude-based barriers are apparently randomly distributed. Three respondants only identified specialised analysis and training as barriers. No reponse identified zero barriers.
+A more detailed inspection shows some evidence that the IT and analytical barriers occur together whereas the attitude-based barriers are apparently randomly distributed. Three respondents only identified specialised analysis and training as barriers. No response identified zero barriers.
 
-Repondants who stated "other" supplied: "time", "enough staff resources and priority to drive forward", "No idea, as we aren't there yet", and three counts where the field was left empty.
+Respondents who stated "other" supplied: "time", "enough staff resources and priority to drive forward", "No idea, as we aren't there yet", and three counts where the field was left empty.
 
 ### Digging Deeper - patterns among barriers
 Look for clusters.
