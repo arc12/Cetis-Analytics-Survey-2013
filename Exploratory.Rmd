@@ -90,7 +90,7 @@ hist(dont.know.sums)
 summary(dont.know.sums)
 ```
 
-The median value of 0.313 indicates that half of the sample had more than around 31%  "don't know" item responses. The 1st quartile of 0.171 indicates that 25% of the responses had around 17% or less "don't know" item responses. The conclusion is clearly that there is a lot of uncertainty. This is particularly striking because the respondents were self-selecting; it would be expected the people with the least knowledge would not respond.
+The median value of 0.313 indicates that half of the sample had more than around 31%  "don't know" item responses. The 1st quartile of 0.171 indicates that 25% of the responses had around 17% or less "don't know" item responses. The conclusion is clearly that there is a lot of uncertainty. This is particularly striking because the respondents were self-selecting; it would be expected the people with the least knowledge would be less likely to respond.
 
 The state of unknowing varies between questions? The following plot shows the mean over all responses for each question.
 
@@ -184,7 +184,7 @@ awareness_Agg<-apply(awareness_T, MARGIN=1, sum)
 pie(awareness_Agg, main="Q4 Staff Awareness Across All Groups", col=col.awareness)
 ```
 
-A stacked bar plot, ordered by increasing number of "Very aware" responses, shows the different levels of perceived awareness within each staff grop:
+A stacked bar plot, ordered by increasing number of "Very aware" responses, shows the different levels of perceived awareness within each staff group:
 
 ```{r fig.width=fw, fig.height=fh, echo=echo.setting}
 op<-par(mar = c(9,4,4,2) +0.1)
@@ -192,7 +192,7 @@ barplot(awareness_T[,order(awareness_T["Very aware",])], col=col.awareness, las=
 legend(x=4.5,y=11,rev(rownames(awareness_T)), fill=rev(col.awareness), cex=0.8, bg="#ffffff")
 par(op)
 ```
-These results are likely to be biassed because of the distribution of backgrounds of respondents and this may mean that we should not assume the item responses that were not "don't know" are representative.
+These results are likely to be biased because of the distribution of backgrounds of respondents and this may mean that we should not assume the item responses that were not "don't know" are representative.
 
 The tentative conclusion seems to be that, unlike many initiatives with a strong data and IT element, executive management awareness is strong. In general, the management and support roles appear to be more aware than the academic staff but the similarity between IT and library staff may not have been expected. This data suggests anyone planning to develop analytics at an institutional or sectoral level should not make too many assumptions about awareness, rather they should investigate the state.
 
@@ -215,7 +215,7 @@ pie(statAnal_Agg, main="Q5 Use of Statistical Analysis Across All Groups", col=c
 
 The general levels of "don't know" are really rather high. What does this tell us? Probably that reports and verbal communications do not refer to this kind of analysis. Whether this means that it is not occurring or that it is being done and not communicated would require further investigation. Arguably, whichever is the case we should be concerned; this kind of analysis is often necessary to decide whether the tables of data and charts really signify a compelling case for action. Furthermore, wider use of these well-established and routine statistical methods within an institution should probably precede use of more advanced predictive methods.
 
-The following plot drills down into the roles and shows that the pattern is pretty similar across all roles with exception of facilities/estates and finance/purchasing. This is unexpected since these areas are the ones where this is most easy to do without the complexity/subtlety of teaching and learning or the uncertainties in external strategic factors; this may be an artefact of the respondent population.
+The following plot drills down into the roles and shows that the pattern is similar across several roles but has facilities/estates and finance/purchasing at an extreme. These areas should be making more use of statistical methods than the data indicates since these areas are the ones where this is most easy to do without the complexity/subtlety of teaching and learning or the uncertainties in external strategic factors; this may be an artefact of the respondent population simply not knowing what goes on in these functional areas.
 
 ```{r fig.width=fw, fig.height=fh, echo=echo.setting}
 op<-par(mar = c(9,4,4,2) +0.1)
@@ -272,7 +272,7 @@ legend(x=4, y=92, rev(rownames(techs_T)), fill=rev(col.yndnk), cex=1.0, bg="#fff
 par(op)
 ```
 
-Although the fraction of "don't know" responses is also quite high for technologies in place, as it was for data sources, there is  consistency across the more common options given in the question: data visualisation, dashboards and data warehouses. The less commonly used technologies are those with the largest number of "don't know" responses although it is plausible that some "don't know" responses for "predictive analytics" occurred because the term is imprecise. As before, we should not assume that the relative proportion of yes/no responses gives an approximate estimate of the proportion of institutions that actually employ these technologies. For data visualisation and dashboards, it might be reasonable to assume that many "don't know" responses should be substituted with "no", given that these are user-facing manifestations of analytics.
+There is some consistency across the more common technologies given in the question: data visualisation, dashboards and data warehouses. The less commonly used technologies are those with the largest number of "don't know" responses although it is plausible that some "don't know" responses for "predictive analytics" occurred because the term is imprecise. As before, we should not assume that the relative proportion of yes/no responses gives an approximate estimate of the proportion of institutions that actually employ these technologies. For data visualisation and dashboards, it might be reasonable to assume that many "don't know" responses should be substituted with "no", given that these are user-facing manifestations of analytics.
 
 Survey respondents were asked to provide information about products/suppliers as textual item responses. Each response could contain any number of product names. The following plot shows the number of item responses for products that were named two or more times. More than 1 supplier may have been specified in a response.
 
@@ -284,7 +284,7 @@ SPSS is now part of the IBM Cognos offering, although it may be used independent
 
 Staff Capabilities
 --------
-The respnses for staff capabilities show some patterns but also plausible evidence that the survey options may have lacked clarity. In particular, it is possible that the responses indicating more than 10 statisticians refer to academic statisticians rather than statisticians in a business support role. "Data Scientist" is likely to be an unfamiliar term to anyone who has not been following the technology media. A large number of "don't know" and "no", is in keeping with its newness as a concept and as a term. The two responses indicating more than 10 data scientists possibly reflects two responses from one institution at the forefront of this field.
+The responses for staff capabilities show some patterns but also plausible evidence that the survey options may have lacked clarity. In particular, it is possible that the responses indicating more than 10 statisticians refer to academic statisticians rather than statisticians in a business support role. "Data Scientist" is likely to be an unfamiliar term to anyone who has not been following the technology media. A large number of "don't know" and "no", is in keeping with its newness as a concept and as a term. The two responses indicating more than 10 data scientists possibly reflects two responses from one institution at the forefront of this field.
 
 ```{r fig.width=fw, fig.height=fh, echo=echo.setting}
 staff<-responses[,50:53]
@@ -333,7 +333,7 @@ col.barriers<-heat.colors(length(barriers_S), alpha=0.5)
 insideLabel.barplot(barriers_S, Main="Q10 Barriers to Adoption", Col=col.barriers, Ylab="% Responses")
 ```
 
-Bearing in mind that survey respondents were self-selecting, and so may have been disproportionately positive in their attitude towards analytics, the results seem to indicate that several common barriers to IT and data based initiatives arising from the attitude of people are not prevalent. The issue of lack of senior management report, which is often seen as a significant challenge, is not a major factor. This matches the earlier-noted level of awareness that is perceived among executive management. Staff and student acceptance is also not seen as an issue. This may be due to there being little practical effect on day-to-day teaching, learning, research, and support from implementing analytics.
+Bearing in mind that survey respondents were self-selecting, and so may have been disproportionately positive in their attitude towards analytics, the results seem to indicate that several common barriers to IT and data based initiatives arising from the attitude of people are not prevalent. The issue of lack of senior management report, which is often seen as a significant challenge, is not a major factor. This matches the earlier-noted level of awareness that is perceived among executive management. Staff and student acceptance is also not seen as an issue. This may be due to there being little practical effect on day-to-day teaching, learning, research, and support because few analytics initiatives have been rolled-out at institutional level. Even if we assume the survey is accurate, it is plausible that attitudes could change dramatically.
 
 Whereas the attitude of people is not generally perceived as a barrier, both IT and analytical capabilities are. Among the respondents, there is a slightly greater sense that the analytical capabilities - specialised analysts and training - are common barriers than IT-related aspects - standardised data and IT resources.
 
@@ -344,7 +344,7 @@ Respondents who stated "other" supplied: "time", "enough staff resources and pri
 ### Digging Deeper - patterns among barriers
 Look for clusters.
 
-A pale colour indicates the row and column are associated. The more pale, the more concentrated the association. From this, we can see that 5 responses only gave "other" while a further "other (response 12) occurred with 3 other options." These form an inevitable and redundant cluster given the nature of the survey.
+A pale colour indicates the row and column are associated. The more pale, the more concentrated the association. From this, we can see that 5 responses only gave "other" - these form a redundant cluster - while a further "other" (response 12) occurred with 3 other options.
 
 ```{r fig.width=fw, fig.height=fh, echo=echo.setting}
 heatmap(as.matrix(barriers), margin=c(9,4), ylab="Response  No.")
@@ -405,10 +405,10 @@ Supplementary Information
 This report was produced by Adam Cooper and the survey was developed by Li Yuan and Stephen Powell. All are members of Cetis and the work was supported by Jisc. It is licensed using the Creative Commons Attribution Licence: http://creativecommons.org/licenses/by/3.0/.
 
 ### Survey Form, Data and Source Code
-These are all available from GitHub:
-* [Survey form](https://github.com/arc12/Cetis-Analytics-Survey-2013/blob/master/survey%20form.pdf?raw=true) (PDF)
-* [Raw data](https://github.com/arc12/Cetis-Analytics-Survey-2013/blob/master/Cetis%20Analtyics%20Survey%202013%20(Anonymised%20Cleaned%20Responses%20III).csv) (CSV)
-* [Source code](https://github.com/arc12/Cetis-Analytics-Survey-2013) for R[2] with the cluster package[3]. This is intended for processing the raw data using knitr, which is conveniently done using [RStudio](http://www.rstudio.com/)
+These are all available from [GitHub](https://github.com/arc12/Cetis-Analytics-Survey-2013):
+* Survey form (PDF)
+* Raw data (CSV)
+* Source code for R[2] with the cluster package[3]. This is intended for processing the raw data using knitr, which is conveniently done using [RStudio](http://www.rstudio.com/)
 
 ### References
 [1]: Peter J. Rousseeuw (1987). Silhouettes: A graphical aid to the interpretation and validation of cluster analysis, Journal of Computational and Applied Mathematics, Volume 20, November 1987, Pages 53-65, ISSN 0377-0427, http://dx.doi.org/10.1016/0377-0427(87)90125-7  
