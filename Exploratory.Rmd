@@ -402,7 +402,7 @@ colnames(responses)
 
 Supplementary Information
 ------
-This report was produced by Adam Cooper and the survey was developed by Li Yuan and Stephen Powell. All are members of Cetis and the work was supported by Jisc. It is licensed using the Creative Commons Attribution Licence: http://creativecommons.org/licenses/by/3.0/.
+This report was produced by Adam Cooper and the survey was developed by Li Yuan, Sheila MacNeill, and Stephen Powell. All are members of Cetis and the work was supported by Jisc. It is licensed using the Creative Commons Attribution Licence: http://creativecommons.org/licenses/by/3.0/.
 
 ### Survey Form, Data and Source Code
 These are all available from [GitHub](https://github.com/arc12/Cetis-Analytics-Survey-2013):
